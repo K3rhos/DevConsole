@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using System;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 
 
@@ -44,6 +45,9 @@ namespace RedSnail
 
         [SerializeField]
         private bool useAnimations = true;
+
+        [SerializeField]
+        private int gameplaySceneIndex = 0;
 
 
 
@@ -126,6 +130,9 @@ namespace RedSnail
 
         private void OpenConsole()
         {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
             if (hasAnimation && useAnimations)
             {
                 StartCoroutine(Coroutine_OpenConsole());
@@ -142,6 +149,14 @@ namespace RedSnail
 
         private void CloseConsole(bool _noAnimation = false)
         {
+            Scene currentScene = SceneManager.GetActiveScene();
+
+            if (currentScene.buildIndex == gameplaySceneIndex)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+
             if (_noAnimation)
             {
                 inputField.DeactivateInputField();
