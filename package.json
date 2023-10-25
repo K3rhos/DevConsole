@@ -1,6 +1,6 @@
 {
   "name": "com.redsnail.devconsole",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "displayName": "Dev Console",
   "description": "A useful dev console",
   "unity": "2019.1",

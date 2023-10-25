@@ -2,13 +2,29 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using System;
-using UnityEngine.UI;
 using System.Collections.Generic;
+
+
 
 namespace RedSnail
 {
     public class Console : MonoBehaviour
     {
+        private static Console singleton = null;
+
+        public static Console Singleton
+        {
+            get
+            {
+                if (singleton == null)
+                {
+                    Debug.LogError($"Fatal error, '{typeof(Console)}' is missing.");
+                }
+
+                return singleton;
+            }
+        }
+
         private bool isOpen = false;
 
         private Animation anim;
@@ -33,6 +49,19 @@ namespace RedSnail
 
         private void Awake()
         {
+            if (singleton == null)
+            {
+                singleton = this;
+
+                DontDestroyOnLoad(this);
+            }
+            else if (singleton != this)
+            {
+                Debug.LogWarning($"An instance of '{typeof(Console)}' already exist, destroying object !");
+
+                Destroy(this.gameObject);
+            }
+
             hasAnimation = TryGetComponent(out anim);
 
             isOpen = openOnAwake;
@@ -56,22 +85,22 @@ namespace RedSnail
 
 
 
-        private void LogMessageReceived(string _condition, string _stackTrace, LogType _type)
+        private void OnDestroy()
         {
-            Dictionary<LogType, Color> colors = new Dictionary<LogType, Color>
+            if (singleton == this)
             {
-                { LogType.Error, Color.red },
-                { LogType.Assert, Color.gray },
-                { LogType.Warning, Color.yellow },
-                { LogType.Log, Color.white },
-                { LogType.Exception, Color.red }
-            };
+                singleton = null;
+            }
+        }
 
-            string color = ColorUtility.ToHtmlStringRGB(colors[_type]);
 
-            string currentTime = DateTime.Now.ToShortTimeString();
 
-            textArea.text += $"<color=#{color}>[{currentTime}] [{_type}] {_condition}</color>\n";
+        private void OnApplicationQuit()
+        {
+            if (singleton == this)
+            {
+                singleton = null;
+            }
         }
 
 
@@ -174,6 +203,26 @@ namespace RedSnail
 
             // Re-Activate the text field
             inputField.ActivateInputField();
+        }
+
+
+
+        private void LogMessageReceived(string _condition, string _stackTrace, LogType _type)
+        {
+            Dictionary<LogType, Color> colors = new Dictionary<LogType, Color>
+            {
+                { LogType.Error, Color.red },
+                { LogType.Assert, Color.gray },
+                { LogType.Warning, Color.yellow },
+                { LogType.Log, Color.white },
+                { LogType.Exception, Color.red }
+            };
+
+            string color = ColorUtility.ToHtmlStringRGB(colors[_type]);
+
+            string currentTime = DateTime.Now.ToShortTimeString();
+
+            textArea.text += $"<color=#{color}>[{currentTime}] [{_type}] {_condition}</color>\n";
         }
     }
 }
