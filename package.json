@@ -1,0 +1,23 @@
+{
+  "name": "com.redsnail.devconsole",
+  "version": "1.0.0",
+  "displayName": "Dev Console",
+  "description": "A useful dev console",
+  "unity": "2019.1",
+  "unityRelease": "0b5",
+  "documentationUrl": "",
+  "changelogUrl": "",
+  "licensesUrl": "",
+  "dependencies": {
+    "com.unity.textmeshpro": "3.0.0"
+  },
+  "keywords": [
+    "dev",
+    "console"
+  ],
+  "author": {
+    "name": "K3rhos",
+    "email": "test@test.test",
+    "url": "https://github.com/K3rhos"
+  }
+}
